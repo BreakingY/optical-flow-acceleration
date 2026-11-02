@@ -1,0 +1,60 @@
+# Makefile for infer_trt
+CXX := g++
+
+TRT_VERSION ?= TRT_10
+
+
+ifeq ($(TRT_VERSION),TRT_10)
+    TRT_DEFINE := -DTRT_10
+else ifeq ($(TRT_VERSION),TRT_84_85)
+    TRT_DEFINE := -DTRT_84_85
+else
+    $(error Unsupported TRT_VERSION=$(TRT_VERSION))
+endif
+
+# Check TensorRT path
+ifeq ($(TRT_PATH),)
+    $(error ERROR: Please specify TRT_PATH, e.g. make TRT_PATH=/usr/local/tensorrt)
+endif
+
+
+
+CXXFLAGS := -g -std=c++17 \
+            $(TRT_DEFINE) \
+            -I$(TRT_PATH)/include \
+            -I/usr/local/cuda/include \
+            -I/usr/local/opencvgpu/include/opencv4
+
+
+# ===============================
+# Link flags
+# ===============================
+
+LDFLAGS := -L$(TRT_PATH)/lib \
+           -L/usr/local/cuda/lib64 \
+           -L/usr/local/opencvgpu/lib \
+           -L./plugin/build/
+
+LDLIBS := -lnvinfer \
+          -lcudart \
+          -lopencv_core \
+          -lopencv_imgproc \
+          -lopencv_imgcodecs \
+          -lopencv_highgui \
+          -lopencv_videoio \
+          -lnppig \
+          -lnppidei \
+          -lnppial \
+          -Wl,--no-as-needed -lgrid_sample_plugin -Wl,--as-needed
+
+TARGET := infer_trt
+
+SRC := infer_trt.cpp
+
+all: $(TARGET)
+
+$(TARGET): $(SRC)
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET) $(LDFLAGS) $(LDLIBS)
+
+clean:
+	rm -f $(TARGET)

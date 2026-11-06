@@ -4,3 +4,4 @@
 # 支持的光流模型
 * PWC-Net
 * SEA-RAFT
+* NeuFlow_v2

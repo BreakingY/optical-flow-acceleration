@@ -5,3 +5,4 @@
 * PWC-Net
 * SEA-RAFT
 * NeuFlow_v2
+* LiteFlowNet3

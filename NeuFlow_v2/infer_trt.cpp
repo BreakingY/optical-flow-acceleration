@@ -88,16 +88,15 @@ void PreprocessImage_GPU(cv::Mat &img, void *buffer, int input_h, int input_w, c
 
     resize_GPU(orig_h, orig_w, img_buffer, buffer, input_h, input_w);
     
-    // pwc-net use BGR
     // BGR-->RGB
-    // Npp8u *pu8_rgb = nullptr;
-    // CUDA_CHECK(cudaMalloc(&pu8_rgb, input_h * input_w * 3));
-    // int aOrder[3] = {2, 1, 0};
-    // NppiSize size = {input_w, input_h};
-    // NppStatus ret = nppiSwapChannels_8u_C3R((Npp8u*)buffer, input_w * 3, pu8_rgb, input_w * 3, size, aOrder);
-    // if(ret != 0){
-    //     std::cerr << "nppiSwapChannels_8u_C3R error: " << ret << std::endl;
-    // }
+    Npp8u *pu8_rgb = nullptr;
+    CUDA_CHECK(cudaMalloc(&pu8_rgb, input_h * input_w * 3));
+    int aOrder[3] = {2, 1, 0};
+    NppiSize size = {input_w, input_h};
+    NppStatus ret = nppiSwapChannels_8u_C3R((Npp8u*)buffer, input_w * 3, pu8_rgb, input_w * 3, size, aOrder);
+    if(ret != 0){
+        std::cerr << "nppiSwapChannels_8u_C3R error: " << ret << std::endl;
+    }
 
     // 转 float 并归一化
     Npp8u *ptr_float = nullptr;
@@ -129,7 +128,7 @@ void PreprocessImage_GPU(cv::Mat &img, void *buffer, int input_h, int input_w, c
 
     CUDA_CHECK(cudaFree(buffer_chw));
     CUDA_CHECK(cudaFree(img_buffer));
-    // CUDA_CHECK(cudaFree(pu8_rgb));
+    CUDA_CHECK(cudaFree(pu8_rgb));
     CUDA_CHECK(cudaFree(ptr_float));
     return;
 }

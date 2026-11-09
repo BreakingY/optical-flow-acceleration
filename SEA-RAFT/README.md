@@ -1,5 +1,7 @@
 # ONNX
 * 基于`https://github.com/Kololu777/onnx-sea-raft`导出onnx
+* SEA-RAFT输入格式:RGB
+
 # TensorRT
 * TensorRT版本：8.4、8.5、10.4
 

@@ -1,5 +1,7 @@
 # ONNX
 * 基于`https://github.com/ibaiGorordo/NeuFlow_v2-Pytorch-Inference`导出onnx
+* NeuFlow v2输入格式:RGB
+
 # TensorRT
 * TensorRT版本：8.4、8.5、10.4
 
